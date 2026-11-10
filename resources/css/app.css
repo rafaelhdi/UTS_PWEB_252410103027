@@ -1,0 +1,144 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/*
+ |--------------------------------------------------------------------------
+ | Tema TaskCraft
+ |--------------------------------------------------------------------------
+ | Palet warna + font didefinisiin di sini (Tailwind v4 pakai @theme,
+ | jadi gak perlu tailwind.config.js lagi dan gak usah pakai CDN).
+ |
+ | base  = hijau-teal pekat, warna dasar (background, card, border)
+ | sand  = krem hangat, buat teks & elemen sekunder
+ | accent= coral, satu-satunya warna highlight buat bagian penting
+ */
+@theme {
+    --font-sans: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    --color-base-950: #07211E;
+    --color-base-900: #0C2F2A;
+    --color-base-800: #124038;
+    --color-base-700: #1A5449;
+    --color-base-600: #24695B;
+
+    --color-sand-100: #FAF6EC;
+    --color-sand-200: #EDE4D2;
+    --color-sand-300: #D8CBB2;
+    --color-sand-400: #B3A488;
+    --color-sand-500: #8A7C61;
+    --color-sand-600: #5F5442;
+
+    --color-accent-200: #FFB39E;
+    --color-accent-300: #FF8F73;
+    --color-accent-400: #FF7350;
+    --color-accent-500: #F85A34;
+    --color-accent-600: #D84420;
+}
+
+/*
+ |--------------------------------------------------------------------------
+ | Latar luar angkasa (bintang-bintang)
+ |--------------------------------------------------------------------------
+ | Bintangnya bukan file gambar, tapi radial-gradient kecil yang diulang
+ | (repeat), jadi CSS-nya tetap ringan dan ikut ke-commit di repo.
+ |
+ | Trik-nya:
+ | - <body> dibikin transparan, warna dasarnya dari <html class="bg-base-950">
+ | - bintang digambar lewat pseudo-element dengan z-index:-1, jadi posisinya
+ |   DI BELAKANG card/teks tapi DI ATAS warna dasar halaman
+ | - ada 2 lapis pseudo: ::before buat nebula + bintang diam,
+ |   ::after buat bintang terang yang kedip pelan (animasi twinkle)
+ */
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+body::before {
+    background-image:
+        /* pendar nebula: hijau-teal + sedikit coral biar ada kedalaman */
+        radial-gradient(1200px 700px at 12% 6%, rgba(36, 105, 91, 0.40), transparent 65%),
+        radial-gradient(900px 600px at 92% 4%, rgba(248, 90, 52, 0.10), transparent 60%),
+        radial-gradient(1000px 800px at 68% 100%, rgba(36, 105, 91, 0.22), transparent 65%),
+        /* bintang kecil, pola berulang 240px */
+        radial-gradient(2px 2px at 18px 26px, rgba(255, 255, 255, 0.90) 40%, transparent 100%),
+        radial-gradient(2px 2px at 96px 44px, rgba(255, 255, 255, 0.75) 40%, transparent 100%),
+        radial-gradient(2px 2px at 205px 62px, rgba(255, 255, 255, 0.85) 40%, transparent 100%),
+        radial-gradient(2px 2px at 62px 118px, rgba(255, 255, 255, 0.70) 40%, transparent 100%),
+        radial-gradient(2px 2px at 152px 134px, rgba(255, 255, 255, 0.90) 40%, transparent 100%),
+        radial-gradient(2px 2px at 26px 186px, rgba(255, 255, 255, 0.75) 40%, transparent 100%),
+        radial-gradient(2px 2px at 216px 202px, rgba(255, 255, 255, 0.85) 40%, transparent 100%),
+        radial-gradient(2px 2px at 118px 224px, rgba(255, 255, 255, 0.70) 40%, transparent 100%),
+        radial-gradient(2px 2px at 178px 166px, rgba(255, 255, 255, 0.80) 40%, transparent 100%),
+        radial-gradient(2px 2px at 74px 78px, rgba(255, 255, 255, 0.65) 40%, transparent 100%),
+        radial-gradient(2px 2px at 232px 140px, rgba(255, 255, 255, 0.75) 40%, transparent 100%),
+        radial-gradient(2px 2px at 140px 12px, rgba(255, 255, 255, 0.80) 40%, transparent 100%),
+        /* bintang kecil lapis kedua, pola 173px biar sebarannya gak kelihatan berpola */
+        radial-gradient(2px 2px at 14px 22px, rgba(255, 255, 255, 0.70) 40%, transparent 100%),
+        radial-gradient(2px 2px at 88px 48px, rgba(255, 255, 255, 0.80) 40%, transparent 100%),
+        radial-gradient(2px 2px at 150px 30px, rgba(255, 255, 255, 0.65) 40%, transparent 100%),
+        radial-gradient(2px 2px at 44px 96px, rgba(255, 255, 255, 0.85) 40%, transparent 100%),
+        radial-gradient(2px 2px at 120px 118px, rgba(255, 255, 255, 0.70) 40%, transparent 100%),
+        radial-gradient(2px 2px at 66px 150px, rgba(255, 255, 255, 0.80) 40%, transparent 100%),
+        radial-gradient(2px 2px at 158px 128px, rgba(255, 255, 255, 0.65) 40%, transparent 100%),
+        radial-gradient(2px 2px at 100px 8px, rgba(255, 255, 255, 0.75) 40%, transparent 100%),
+        /* bintang agak gedean, pola 480px */
+        radial-gradient(3px 3px at 46px 64px, rgba(255, 255, 255, 0.95) 45%, transparent 100%),
+        radial-gradient(3px 3px at 300px 122px, rgba(255, 255, 255, 0.85) 45%, transparent 100%),
+        radial-gradient(3px 3px at 146px 402px, rgba(255, 255, 255, 0.90) 45%, transparent 100%),
+        radial-gradient(3px 3px at 418px 296px, rgba(255, 255, 255, 0.80) 45%, transparent 100%),
+        radial-gradient(3px 3px at 262px 218px, rgba(255, 255, 255, 0.90) 45%, transparent 100%),
+        radial-gradient(3px 3px at 92px 332px, rgba(255, 255, 255, 0.85) 45%, transparent 100%);
+    background-repeat: no-repeat, no-repeat, no-repeat,
+        repeat, repeat, repeat, repeat, repeat, repeat, repeat,
+        repeat, repeat, repeat, repeat, repeat, repeat,
+        repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat,
+        repeat, repeat, repeat, repeat, repeat, repeat;
+    background-size: 100% 100%, 100% 100%, 100% 100%,
+        240px 240px, 240px 240px, 240px 240px, 240px 240px, 240px 240px, 240px 240px,
+        240px 240px, 240px 240px, 240px 240px, 240px 240px, 240px 240px, 240px 240px,
+        173px 173px, 173px 173px, 173px 173px, 173px 173px, 173px 173px, 173px 173px, 173px 173px, 173px 173px,
+        480px 480px, 480px 480px, 480px 480px, 480px 480px, 480px 480px, 480px 480px;
+}
+
+body::after {
+    /* bintang paling terang + halo tipis, ini yang kedip-kedip */
+    background-image:
+        radial-gradient(7px 7px at 120px 150px, rgba(255, 255, 255, 0.20), transparent 70%),
+        radial-gradient(3px 3px at 120px 150px, rgba(255, 255, 255, 0.95) 45%, transparent 100%),
+        radial-gradient(7px 7px at 430px 92px, rgba(255, 255, 255, 0.16), transparent 70%),
+        radial-gradient(3px 3px at 430px 92px, rgba(255, 255, 255, 0.90) 45%, transparent 100%),
+        radial-gradient(7px 7px at 300px 500px, rgba(255, 255, 255, 0.18), transparent 70%),
+        radial-gradient(3px 3px at 300px 500px, rgba(255, 255, 255, 0.95) 45%, transparent 100%),
+        radial-gradient(7px 7px at 560px 380px, rgba(255, 255, 255, 0.14), transparent 70%),
+        radial-gradient(3px 3px at 560px 380px, rgba(255, 255, 255, 0.85) 45%, transparent 100%);
+    background-repeat: repeat;
+    background-size: 620px 620px;
+    animation: taskcraft-twinkle 7s ease-in-out infinite alternate;
+}
+
+@keyframes taskcraft-twinkle {
+    from {
+        opacity: 0.35;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* buat yang di HP/OS-nya nyetel "kurangi gerakan", bintangnya dibikin diam aja */
+@media (prefers-reduced-motion: reduce) {
+    body::after {
+        animation: none;
+        opacity: 0.75;
+    }
+}
